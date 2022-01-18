@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+obj/
+bin/
+.vs/
+shtormteh.configuration.service.xml
+appsettings.Development.json
+shtormteh.configuration.service.csproj.user
