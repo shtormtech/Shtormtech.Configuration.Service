@@ -5,6 +5,7 @@
 obj/
 bin/
 .vs/
-shtormteh.configuration.service.xml
+shtormtech.configuration.service.xml
 appsettings.Development.json
-shtormteh.configuration.service.csproj.user
+shtormtech.configuration.service.csproj.user
+repo/

@@ -1,4 +1,4 @@
-﻿namespace shtormteh.configuration.service.Config
+﻿namespace shtormtech.configuration.service.Config
 {
     /// <summary>
     /// Настройки swagger

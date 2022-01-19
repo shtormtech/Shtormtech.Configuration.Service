@@ -5,12 +5,16 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>shtormteh.configuration.service.xml</DocumentationFile>
+    <DocumentationFile>shtormtech.configuration.service.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\shtormtech.configuration.git\shtormtech.configuration.git.csproj" />
   </ItemGroup>
 
 </Project>

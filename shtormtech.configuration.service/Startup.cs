@@ -1,25 +1,24 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-using shtormteh.configuration.service.Config;
+using shtormtech.configuration.git;
+using shtormtech.configuration.service.Config;
+using shtormtech.configuration.service.Services;
 
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace shtormteh.configuration.service
+namespace shtormtech.configuration.service
 {
     public class Startup
     {
         const string BaseSectionConfig = "BaseConfiguration";
+        const string HealthCheckUri = @"/health";
         public SwaggerConfig SwaggerConfig => Configuration.GetSection(BaseSectionConfig).Get<BaseConfiguration>().SwaggerConfig;
         private readonly IWebHostEnvironment _hostingEnv;
         public IConfiguration Configuration { get; }
@@ -37,15 +36,19 @@ namespace shtormteh.configuration.service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ICommands, Commands>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IRepositoryService, RepositoryService>();
 
             services.AddControllers();
             services.AddHealthChecks();
             services.AddOptions();
+            services.Configure<BaseConfiguration>(Configuration.GetSection(BaseSectionConfig));
             if (SwaggerConfig.IsEnabled)
             {
                 services.AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v0", new OpenApiInfo { Title = "shtormteh.configuration.service", Version = "v0" });
+                    c.SwaggerDoc("v0", new OpenApiInfo { Title = "shtormtech.configuration.service", Version = "v0" });
                     var xmlPath = $"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}{_hostingEnv.ApplicationName}.xml";
                     if (File.Exists(xmlPath))
                     {
@@ -56,7 +59,6 @@ namespace shtormteh.configuration.service
             }
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -80,7 +82,7 @@ namespace shtormteh.configuration.service
 
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint($"{SwaggerConfig.EndpointPrefix.TrimEnd('/')}/swagger/v0/swagger.json", "shtormteh.configuration.service API V0");
+                    c.SwaggerEndpoint($"{SwaggerConfig.EndpointPrefix.TrimEnd('/')}/swagger/v0/swagger.json", "shtormtech.configuration.service API V0");
                     c.RoutePrefix = "swagger";
                 });
             }
@@ -93,7 +95,7 @@ namespace shtormteh.configuration.service
             {
                 endpoints.MapControllers();
             });
-            app.UseHealthChecks("/health");
+            app.UseHealthChecks(HealthCheckUri);
         }
     }
 }

@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "shtormteh.configuration.service": {
+    "shtormtech.configuration.service": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

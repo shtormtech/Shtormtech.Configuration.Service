@@ -1,10 +1,11 @@
-﻿namespace shtormteh.configuration.service.Config
+﻿namespace shtormtech.configuration.service.Config
 {
     /// <summary>
     /// Основная конфигураия сервиса
     /// </summary>
-    internal class BaseConfiguration
+    public class BaseConfiguration
     {
         public SwaggerConfig SwaggerConfig { get; set; }
+        public GitConfig Git { get; set; }
     }
 }

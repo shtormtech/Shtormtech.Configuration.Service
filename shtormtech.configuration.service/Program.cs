@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace shtormteh.configuration.service
+namespace shtormtech.configuration.service
 {
     public class Program
     {
