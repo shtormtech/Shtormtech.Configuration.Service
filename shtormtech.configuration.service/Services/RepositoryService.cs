@@ -12,8 +12,8 @@ namespace shtormtech.configuration.service.Services
     public class RepositoryService : IRepositoryService
     {
         private GitConfig GitConfiguration { get; }
-        private readonly ICommands Commands;
-        private readonly ILogger<RepositoryService> Logger;
+        private ICommands Commands { get; }
+        private ILogger<RepositoryService> Logger { get; }
         public RepositoryService(ILogger<RepositoryService> logger, ICommands commands, IOptions<BaseConfiguration> baseConfiguration)
         {
             Logger = logger ?? throw new ArgumentException(nameof(logger)); ;
@@ -23,7 +23,7 @@ namespace shtormtech.configuration.service.Services
 
         public async Task CloneRepositoryAsync(string repoFolder = "repo")
         {
-            await Commands.CloneRepositoryAsync(repoFolder, GitConfiguration.Uri, GitConfiguration.User, GitConfiguration.Password);
+            await Commands.CloneRepositoryAsync(repoFolder);
         }
     }
 }

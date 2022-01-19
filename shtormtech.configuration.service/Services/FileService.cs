@@ -21,6 +21,7 @@ namespace shtormtech.configuration.service.Services
 
         public async Task<string> GetFileAsync(string fileName, string branch = _defaultBranch)
         {
+            await Commands.PullRepositoryAsync();
             return await Commands.GetFileAsync(fileName, branch ?? _defaultBranch);
         }
     }

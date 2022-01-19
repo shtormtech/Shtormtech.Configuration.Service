@@ -19,8 +19,9 @@ namespace shtormtech.configuration.service
     {
         const string BaseSectionConfig = "BaseConfiguration";
         const string HealthCheckUri = @"/health";
-        public SwaggerConfig SwaggerConfig => Configuration.GetSection(BaseSectionConfig).Get<BaseConfiguration>().SwaggerConfig;
         private readonly IWebHostEnvironment _hostingEnv;
+        public SwaggerConfig SwaggerConfig { get; }
+        public GitConfig GitConfiguration { get; }
         public IConfiguration Configuration { get; }
         public Startup(IWebHostEnvironment env)
         {
@@ -31,12 +32,15 @@ namespace shtormtech.configuration.service
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: false)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            var baseConfiguration = Configuration.GetSection(BaseSectionConfig).Get<BaseConfiguration>();
+            SwaggerConfig = baseConfiguration.SwaggerConfig;
+            GitConfiguration = baseConfiguration.Git;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ICommands, Commands>();
+            services.AddScoped<ICommands>(provider => new Commands(GitConfiguration.Uri, GitConfiguration.User, GitConfiguration.Password));
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IRepositoryService, RepositoryService>();
 
