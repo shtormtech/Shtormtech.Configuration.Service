@@ -11,19 +11,19 @@ namespace shtormtech.configuration.service.Services
 {
     public class RepositoryService : IRepositoryService
     {
-        private GitConfig Configuration { get; }
+        private GitConfig GitConfiguration { get; }
         private readonly ICommands Commands;
         private readonly ILogger<RepositoryService> Logger;
         public RepositoryService(ILogger<RepositoryService> logger, ICommands commands, IOptions<BaseConfiguration> baseConfiguration)
         {
             Logger = logger ?? throw new ArgumentException(nameof(logger)); ;
             Commands = commands ?? throw new ArgumentException(nameof(commands));
-            Configuration = baseConfiguration.Value.Git ?? throw new InvalidOperationException("ivalid git config");
+            GitConfiguration = baseConfiguration.Value.Git ?? throw new InvalidOperationException("ivalid git config");
         }
 
-        public async Task CloneRepositoryAsync(string repoUri, string user = "", string password = "")
+        public async Task CloneRepositoryAsync(string repoFolder = "repo")
         {
-            await Commands.CloneRepositoryAsync(repoUri, user, password);
+            await Commands.CloneRepositoryAsync(repoFolder, GitConfiguration.Uri, GitConfiguration.User, GitConfiguration.Password);
         }
     }
 }

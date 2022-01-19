@@ -4,6 +4,6 @@ namespace shtormtech.configuration.service.Services
 {
     public interface IRepositoryService
     {
-        Task CloneRepositoryAsync(string repoUri, string user = "", string password = "");
+        Task CloneRepositoryAsync(string repoFolder);
     }
 }

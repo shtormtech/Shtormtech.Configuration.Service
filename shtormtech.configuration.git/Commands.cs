@@ -14,7 +14,7 @@ namespace shtormtech.configuration.git
         const string _repositoryFolder = "repo";
         //const string _repositoryFolder = @"D:\develop\uralSbyt\cec.projects.configs";
 
-        public async Task CloneRepositoryAsync(string repoUri, string user = "", string password = "")
+        public async Task CloneRepositoryAsync(string repoFolder, string repoUri, string user = "", string password = "")
         {
             var byteArray = Encoding.ASCII.GetBytes(":" + password);
             var encodedToken = Convert.ToBase64String(byteArray);
