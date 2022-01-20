@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using shtormtech.configuration.service.Extensions;
+
 using System.Threading.Tasks;
 
 namespace shtormtech.configuration.service
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            await CreateHostBuilder(args)
+                    .Build()
+                    .Initialize()
+                    .RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -1,11 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using shtormtech.configuration.common.Enums;
+
+using System.Threading.Tasks;
 
 namespace shtormtech.configuration.git
 {
     public interface ICommands
     {
-        Task CloneRepositoryAsync(string repoFolder);
-        Task PullRepositoryAsync();
+        Task<string> CloneRepositoryAsync();
+        Task<MergeStatus> PullRepositoryAsync();
+        string CloneRepository();
+        MergeStatus PullRepository();
         Task<string> GetFileAsync(string fileName, string branch = "master");
     }
 }

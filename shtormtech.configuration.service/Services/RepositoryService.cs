@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using shtormtech.configuration.common.Enums;
 using shtormtech.configuration.git;
 using shtormtech.configuration.service.Config;
 
@@ -21,9 +22,24 @@ namespace shtormtech.configuration.service.Services
             GitConfiguration = baseConfiguration.Value.Git ?? throw new InvalidOperationException("ivalid git config");
         }
 
-        public async Task CloneRepositoryAsync(string repoFolder = "repo")
+        public async Task<string> CloneRepositoryAsync()
         {
-            await Commands.CloneRepositoryAsync(repoFolder);
+            return await Commands.CloneRepositoryAsync();
+        }
+
+        public async Task<MergeStatus> PullRepositoryAsync()
+        {
+            return await Commands.PullRepositoryAsync();
+        }
+
+        public string CloneRepository()
+        {
+            return Commands.CloneRepository();
+        }
+
+        public MergeStatus PullRepository()
+        {
+            return Commands.PullRepository();
         }
     }
 }

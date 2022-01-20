@@ -1,18 +1,20 @@
 ﻿using LibGit2Sharp;
 
 using commonExceptions = shtormtech.configuration.common.Exceptions;
+using commonEnums = shtormtech.configuration.common.Enums;
 
 using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using shtormtech.configuration.common.Exceptions;
 
 namespace shtormtech.configuration.git
 {
     public class Commands : ICommands
     {
-        // const string _repositoryFolder = "repo";
-        private string RepositoryFolder { get; } = @"D:\develop\uralSbyt\cec.projects.configs";
+        private string RepositoryFolder { get; } = "repo";
+        // private string RepositoryFolder { get; } = @"D:\develop\uralSbyt\cec.projects.configs";
         private string GitRepoUri {get; }
         private string UserName { get; }
         private string Password { get; }
@@ -24,7 +26,7 @@ namespace shtormtech.configuration.git
             Password = password ?? throw new ArgumentException(nameof(password));
         }
 
-        public async Task CloneRepositoryAsync(string repoFolder)
+        public string CloneRepository()
         {
             var byteArray = Encoding.ASCII.GetBytes(":" + Password);
             var encodedToken = Convert.ToBase64String(byteArray);
@@ -37,10 +39,18 @@ namespace shtormtech.configuration.git
                     $"Authorization: Basic {encodedToken}"
                 }
             };
-            Repository.Clone(GitRepoUri, RepositoryFolder, co);            
+            // $exception	{"'repo' exists and is not an empty directory"}	LibGit2Sharp.NameConflictException
+            try
+            {
+                return Repository.Clone(GitRepoUri, RepositoryFolder, co);
+            }
+            catch(NameConflictException ex)
+            {
+                throw new DirectoryNotEmptyException(ex.Message, ex);
+            }
         }
 
-        public async Task PullRepositoryAsync()
+        public commonEnums.MergeStatus PullRepository()
         {
             var byteArray = Encoding.ASCII.GetBytes(":" + Password);
             var encodedToken = Convert.ToBase64String(byteArray);
@@ -61,7 +71,7 @@ namespace shtormtech.configuration.git
                     new Identity("MERGE_USER_NAME", "MERGE_USER_EMAIL"), DateTimeOffset.Now);
 
                 // Pull
-                LibGit2Sharp.Commands.Pull(repo, signature, options);
+                return (commonEnums.MergeStatus)LibGit2Sharp.Commands.Pull(repo, signature, options).Status;
             }
         }
         
@@ -84,6 +94,16 @@ namespace shtormtech.configuration.git
             }
 
             return commitContent;;
+        }
+
+        public Task<string> CloneRepositoryAsync()
+        {
+            return Task.Run(() => CloneRepository());
+        }
+
+        public Task<commonEnums.MergeStatus> PullRepositoryAsync()
+        {
+            return Task.Run(() => PullRepository());
         }
     }
 }
