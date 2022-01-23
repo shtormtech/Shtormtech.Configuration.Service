@@ -6,10 +6,10 @@ namespace shtormtech.configuration.git
 {
     public interface ICommands
     {
-        Task<string> CloneRepositoryAsync();
-        Task<MergeStatus> PullRepositoryAsync();
-        string CloneRepository();
-        MergeStatus PullRepository();
-        Task<string> GetFileAsync(string fileName, string branch = "master");
+        Task<string> CloneRepositoryAsync(string repoUri, string repoFolder, string username, string password);
+        Task<MergeStatus> PullRepositoryAsync(string repoFolder, string username, string password);
+        string CloneRepository(string repoUri, string repoFolder, string username, string password);
+        MergeStatus PullRepository(string repoFolder, string username, string password);
+        Task<string> GetFileAsync(string repoFolder, string fileName, string branch = "master");
     }
 }

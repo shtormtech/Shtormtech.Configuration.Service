@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace shtormtech.configuration.common.Enums
+﻿namespace shtormtech.configuration.common.Enums
 {
     public enum MergeStatus
     {

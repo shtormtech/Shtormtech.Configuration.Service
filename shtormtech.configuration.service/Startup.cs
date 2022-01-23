@@ -40,7 +40,7 @@ namespace shtormtech.configuration.service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ICommands>(provider => new Commands(GitConfiguration.Uri, GitConfiguration.User, GitConfiguration.Password));
+            services.AddScoped<ICommands, Commands>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IRepositoryService, RepositoryService>();
 

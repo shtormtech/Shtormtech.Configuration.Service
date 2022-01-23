@@ -12,23 +12,12 @@ using shtormtech.configuration.common.Exceptions;
 namespace shtormtech.configuration.git
 {
     public class Commands : ICommands
-    {
-        private string RepositoryFolder { get; } = "repo";
+    {        
         // private string RepositoryFolder { get; } = @"D:\develop\uralSbyt\cec.projects.configs";
-        private string GitRepoUri {get; }
-        private string UserName { get; }
-        private string Password { get; }
 
-        public Commands(string gitRepoUri, string userName, string password)
+        public string CloneRepository(string repoUri, string repoFolder, string username, string password)
         {
-            GitRepoUri = gitRepoUri ?? throw new ArgumentException(nameof(gitRepoUri));
-            UserName = userName ?? throw new ArgumentException(nameof(userName));
-            Password = password ?? throw new ArgumentException(nameof(password));
-        }
-
-        public string CloneRepository()
-        {
-            var byteArray = Encoding.ASCII.GetBytes(":" + Password);
+            var byteArray = Encoding.ASCII.GetBytes($":{password}");
             var encodedToken = Convert.ToBase64String(byteArray);
 
             var co = new CloneOptions();
@@ -39,10 +28,10 @@ namespace shtormtech.configuration.git
                     $"Authorization: Basic {encodedToken}"
                 }
             };
-            // $exception	{"'repo' exists and is not an empty directory"}	LibGit2Sharp.NameConflictException
+
             try
             {
-                return Repository.Clone(GitRepoUri, RepositoryFolder, co);
+                return Repository.Clone(repoUri, repoFolder, co);
             }
             catch(NameConflictException ex)
             {
@@ -50,11 +39,15 @@ namespace shtormtech.configuration.git
             }
         }
 
-        public commonEnums.MergeStatus PullRepository()
+        public commonEnums.MergeStatus PullRepository(string repoFolder, string username, string password)
         {
-            var byteArray = Encoding.ASCII.GetBytes(":" + Password);
+            var byteArray = Encoding.ASCII.GetBytes($":{password}");
             var encodedToken = Convert.ToBase64String(byteArray);
-            using (var repo = new Repository(RepositoryFolder))
+            if (!Repository.IsValid(repoFolder))
+            {
+                throw new NotValidGitRepoException($"Repository folder \"RepositoryFolder\" is not valig Git repository");
+            }
+            using (var repo = new Repository(repoFolder))
             {
                 // Credential information to fetch
                 PullOptions options = new PullOptions();
@@ -70,16 +63,16 @@ namespace shtormtech.configuration.git
                 var signature = new Signature(
                     new Identity("MERGE_USER_NAME", "MERGE_USER_EMAIL"), DateTimeOffset.Now);
 
-                // Pull
+                // Pull                
                 return (commonEnums.MergeStatus)LibGit2Sharp.Commands.Pull(repo, signature, options).Status;
             }
         }
         
-        public async Task<string> GetFileAsync(string fileName, string branch)
+        public async Task<string> GetFileAsync(string repoFolder, string fileName, string branch = "master")
         {
             string commitContent;
 
-            using (var repo = new Repository(RepositoryFolder))
+            using (var repo = new Repository(repoFolder))
             {
                 var repoBbranch = repo.Branches[branch]
                     ?? repo.Branches[$"{repo.Head.RemoteName}/{branch}"]
@@ -96,14 +89,14 @@ namespace shtormtech.configuration.git
             return commitContent;;
         }
 
-        public Task<string> CloneRepositoryAsync()
+        public Task<string> CloneRepositoryAsync(string repoUri, string repoFolder, string username, string password)
         {
-            return Task.Run(() => CloneRepository());
+            return Task.Run(() => CloneRepository(repoUri, repoFolder, username, password));
         }
 
-        public Task<commonEnums.MergeStatus> PullRepositoryAsync()
+        public Task<commonEnums.MergeStatus> PullRepositoryAsync(string repoFolder, string username, string password)
         {
-            return Task.Run(() => PullRepository());
+            return Task.Run(() => PullRepository(repoFolder, username, password));
         }
     }
 }

@@ -20,7 +20,7 @@ namespace shtormtech.configuration.service.Controllers
             FileService = fileService ?? throw new ArgumentException(nameof(fileService)); ;
         }
 
-        [HttpGet("/{**path}")]
+        [HttpGet("/files/{**path}")]
         public async Task<string> Path([FromRoute] string path, [FromQuery] string branch)
         {
             return await FileService.GetFileAsync(path, branch);
