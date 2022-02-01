@@ -26,7 +26,7 @@ jobs:
         # Docker repository to tag the image with
         repository: shtormtech/configuration-service
         # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
-        tags: $(date +%s), latest
+        tags: latest
         # Automatically tags the built image with the git reference as per the readme
         tag_with_ref: true
         # Path to the build context
